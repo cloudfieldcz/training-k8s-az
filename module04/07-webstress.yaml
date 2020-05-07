@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webstress
+spec:
+  selector:
+    matchLabels:
+        app: webstress
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webstress
+    spec:
+      containers:
+        - name: hostname
+          image: YOURACRNAME.azurecr.io/webstress:v1
+          imagePullPolicy: Always    # Best practice for security - user will no access to image might get it from local cache
+          env:
+          - name: CYCLECOUNT
+            value: "500"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webstress
+  name: webstress
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5001
+    name: http
+  selector:
+    app: webstress
+  type: LoadBalancer
