@@ -24,27 +24,12 @@ kubectl create secret generic myrelease-myapp \
   --from-literal=postgresqlurl="$POSTGRESQL_URL" \
   --namespace myapp
 
-# add helm charts from local to ACR repo
-az configure --defaults acr=${ACR_NAME}
-# get access token for helm (similar to docker login)
-az acr helm repo add
-# pack helm repo
-helm package helm/myapp
-# push repo to ACR(helm)
-az acr helm push myapp-0.1.0.tgz
-
-# list repos (two examples)
-az acr helm list
-
-helm update
-helm search ${ACR_NAME}
-
 # Get ingress public IP
-export INGRESS_IP=$(kubectl get svc ingress-nginx-ingress-controller -o=custom-columns=EXTERNAL-IP:.status.loadBalancer.ingress[*].ip | grep -v "EXTERNAL-IP")
+export INGRESS_IP=$(kubectl get svc nginx-ingress-ingress-nginx-controller -n nginx-ingress -o=custom-columns=EXTERNAL-IP:.status.loadBalancer.ingress[*].ip | grep -v "EXTERNAL-IP")
 echo "You will be able to access application on this URL: http://${INGRESS_IP}.xip.io"
 
 # deploy from ACR helm repository
-helm upgrade --install myrelease ${ACR_NAME}/myapp --namespace='myapp' --set-string appspa.image.repository="${ACR_NAME}.azurecr.io/myappspa",appspa.image.tag='v1',apptodo.image.repository="${ACR_NAME}.azurecr.io/myapptodo",apptodo.image.tag='v1',apphost="${INGRESS_IP}.xip.io"
+helm upgrade --install myrelease helm/myapp --namespace='myapp' --set-string appspa.image.repository="${ACR_NAME}.azurecr.io/myappspa",appspa.image.tag='v1',apptodo.image.repository="${ACR_NAME}.azurecr.io/myapptodo",apptodo.image.tag='v1',apphost="${INGRESS_IP}.xip.io"
 
 # clean-up deployment
 helm delete --purge myrelease
