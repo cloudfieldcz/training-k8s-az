@@ -25,7 +25,7 @@ kubectl create secret generic myrelease-myapp \
   --namespace myapp
 
 # Get ingress public IP
-export INGRESS_IP=$(kubectl get svc nginx-ingress-ingress-nginx-controller -n nginx-ingress -o=custom-columns=EXTERNAL-IP:.status.loadBalancer.ingress[*].ip | grep -v "EXTERNAL-IP")
+export INGRESS_IP=$(kubectl get service nginx-ingress-ingress-nginx-controller  -n nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "You will be able to access application on this URL: http://${INGRESS_IP}.xip.io"
 
 # deploy from ACR helm repository
