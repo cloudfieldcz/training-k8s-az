@@ -25,7 +25,7 @@ jobs:
       env:
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     # deploy to server
-    #- name: Deploy to AppServer
+    ##- name: Deploy to AppServer
     #  uses: appleboy/ssh-action@master
      # with:
      #   host: ${{ secrets.APP_HOST }}
