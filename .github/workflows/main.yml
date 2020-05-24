@@ -29,7 +29,6 @@ jobs:
         release: 'myrelease'
         namespace: 'myapp'
         chart: './module05/helm/myapp'
-        helm: 'helm3'
         values: |
           appspa:
             image:
