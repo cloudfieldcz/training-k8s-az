@@ -24,14 +24,18 @@ jobs:
         docker push cloudfield011acr.azurecr.io/myapptodo:latest
       env:
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    # deploy to server
-    ##- name: Deploy to AppServer
-    #  uses: appleboy/ssh-action@master
-     # with:
-     #   host: ${{ secrets.APP_HOST }}
-     #   username: ${{ secrets.APP_USERNAME }}
-      #  key: ${{ secrets.APP_KEY }}
-      #  port: ${{ secrets.APP_PORT }}
-      #  script: |
-      #    cd /opt/wp && docker-compose pull
-      #    systemctl restrt cloudfieldwp.service
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v1'
+      with:
+        release: 'myrelease'
+        namespace: 'myapp'
+        chart: './module05/helm/myapp'
+        helm: 'helm3'
+        values: |
+          appspa.image.repository: "cloudfield011acr.azurecr.io/myappspa"
+          appspa.image.tag: '${{ github.sha }}'
+          apptodo.image.repository: "cloudfield011acr.azurecr.io/myapptodo"
+          apptodo.image.tag='${{ github.sha }}'
+          apphost="52.143.250.69.xip.io"
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
