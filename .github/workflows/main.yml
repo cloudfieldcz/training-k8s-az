@@ -31,10 +31,14 @@ jobs:
         chart: './module05/helm/myapp'
         helm: 'helm3'
         values: |
-          appspa.image.repository: "cloudfield011acr.azurecr.io/myappspa"
-          appspa.image.tag: '${{ github.sha }}'
-          apptodo.image.repository: "cloudfield011acr.azurecr.io/myapptodo"
-          apptodo.image.tag: '${{ github.sha }}'
+          appspa:
+            image:
+              repository: "cloudfield011acr.azurecr.io/myappspa"
+              tag: '${{ github.sha }}'
+          apptodo:
+            image: 
+              repository: "cloudfield011acr.azurecr.io/myapptodo"
+              tag: '${{ github.sha }}'
           apphost: "52.143.250.69.xip.io"
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
