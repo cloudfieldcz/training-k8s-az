@@ -1,0 +1,37 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # build in docker
+    - name: Build docker
+      run: |
+        docker build ./src/myappspa -t cloudfield011acr.azurecr.io/myappspa:${{ github.sha }} -t cloudfield011acr.azurecr.io/myappspa:latest
+        docker build ./src/myappspa -t cloudfield011acr.azurecr.io/myapptodo:${{ github.sha }} -t cloudfield011acr.azurecr.io/myapptodo:latest
+        docker login --username cloudfield011acr --password $DOCKERHUB_TOKEN
+        docker push cloudfield011acr.azurecr.io/myappspa:${{ github.sha }}
+        docker push cloudfield011acr.azurecr.io/myappspa:latest
+        docker push cloudfield011acr.azurecr.io/myapptodo:${{ github.sha }}
+        docker push cloudfield011acr.azurecr.io/myapptodo:latest
+      env:
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    # deploy to server
+    #- name: Deploy to AppServer
+    #  uses: appleboy/ssh-action@master
+     # with:
+     #   host: ${{ secrets.APP_HOST }}
+     #   username: ${{ secrets.APP_USERNAME }}
+      #  key: ${{ secrets.APP_KEY }}
+      #  port: ${{ secrets.APP_PORT }}
+      #  script: |
+      #    cd /opt/wp && docker-compose pull
+      #    systemctl restrt cloudfieldwp.service
