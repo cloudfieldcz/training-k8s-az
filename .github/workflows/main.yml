@@ -17,7 +17,7 @@ jobs:
       run: |
         docker build ./module01/src/myappspa -t cloudfield011acr.azurecr.io/myappspa:${{ github.sha }} -t cloudfield011acr.azurecr.io/myappspa:latest
         docker build ./module01/src/myapptodo -t cloudfield011acr.azurecr.io/myapptodo:${{ github.sha }} -t cloudfield011acr.azurecr.io/myapptodo:latest
-        docker login --username cloudfield011acr --password $DOCKERHUB_TOKEN
+        docker login cloudfield011acr.azurecr.io --username cloudfield011acr --password $DOCKERHUB_TOKEN
         docker push cloudfield011acr.azurecr.io/myappspa:${{ github.sha }}
         docker push cloudfield011acr.azurecr.io/myappspa:latest
         docker push cloudfield011acr.azurecr.io/myapptodo:${{ github.sha }}
