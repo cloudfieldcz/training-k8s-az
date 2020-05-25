@@ -37,6 +37,39 @@ helm --namespace myapp delete myrelease
 kubectl delete namespace myapp
 ```
 
+## Deployment to Kubernetes using Github Actions
+This CI/CD demo contains simple Github pipeline using Github Actions. The pipeline automatically builds and deploys changes in the master branch to the Kubernetes cluster (AKS).
+
+### Creating Github pipeline file
+```bash
+# Copy .github folder to the repository root path
+cp -r ./module05/.github .github
+# Replace variables in the Github pipeline 
+sed -i '' 's/YOURACRNAME/'$ACR_NAME'/g' .github/workflows/*.yml
+sed -i '' 's/INGRESSIP/'$INGRESS_IP'/g' .github/workflows/*.yml
+```
+
+### Creating Secrets on Github (in the repository Settings)
+![Adding Github secret](images/github_secrets.png)
+
+1) The DOCKERHUB_TOKEN secret
+
+Insert value from the following command:
+```bash
+az acr credential show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query "passwords[0].value" --output tsv
+```
+2) The KUBECONFIG secret
+
+Insert the content of the cluster config file (see the parameter --file, you can change it as you wish):
+```bash
+az aks get-credentials --admin --name ${AKS_CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --file /tmp/${AKS_CLUSTER_NAME}
+```
+
+### Running pipeline
+When you commit your .github folder to your forked repo, the Github will run the Action. The Action log could be found on the repository page:
+![Running Github action](images/github_action.png)
+The Action will be fired on all changes in your repository, so all changes in the master branch will be automatically deployed.
+
 ## CI/CD based on GitHub + Azure Container Registry build
 
 This CI/CD demo contains CI simple pipeline in Azure Container Registry and CD pipeline in FLUX (git based delivery system - https://github.com/weaveworks/flux ).
