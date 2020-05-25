@@ -1,0 +1,44 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    # build in docker
+    - name: Build docker
+      run: |
+        docker build ./module01/src/myappspa -t YOURACRNAME.azurecr.io/myappspa:${{ github.sha }} -t YOURACRNAME.azurecr.io/myappspa:latest
+        docker build ./module01/src/myapptodo -t YOURACRNAME.azurecr.io/myapptodo:${{ github.sha }} -t YOURACRNAME.azurecr.io/myapptodo:latest
+        docker login YOURACRNAME.azurecr.io --username YOURACRNAME --password $DOCKERHUB_TOKEN
+        docker push YOURACRNAME.azurecr.io/myappspa:${{ github.sha }}
+        docker push YOURACRNAME.azurecr.io/myappspa:latest
+        docker push YOURACRNAME.azurecr.io/myapptodo:${{ github.sha }}
+        docker push YOURACRNAME.azurecr.io/myapptodo:latest
+      env:
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v1'
+      with:
+        release: 'myrelease'
+        namespace: 'myapp'
+        chart: './module05/helm/myapp'
+        helm: 'helm3' 
+        values: |
+          appspa:
+            image:
+              repository: "YOURACRNAME.azurecr.io/myappspa"
+              tag: '${{ github.sha }}'
+          apptodo:
+            image: 
+              repository: "YOURACRNAME.azurecr.io/myapptodo"
+              tag: '${{ github.sha }}'
+          apphost: "INGRESSIP.xip.io"
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
