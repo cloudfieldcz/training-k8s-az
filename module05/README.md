@@ -37,20 +37,20 @@ helm --namespace myapp delete myrelease
 kubectl delete namespace myapp
 ```
 
-## Deployment to Kubernetes using Github Actions
-This CI/CD demo contains simple Github pipeline using Github Actions. The pipeline automatically builds and deploys changes in the master branch to the Kubernetes cluster (AKS).
+## Deployment to Kubernetes using GitHub Actions
+This CI/CD demo contains simple GitHub pipeline using GitHub Actions. The pipeline automatically builds and deploys changes in the master branch to the Kubernetes cluster (AKS).
 
-### Creating Github pipeline file
+### Creating GitHub pipeline file
 ```bash
 # Copy .github folder to the repository root path
 cp -r ./module05/.github .github
-# Replace variables in the Github pipeline 
+# Replace variables in the GitHub pipeline 
 sed -i '' 's/YOURACRNAME/'$ACR_NAME'/g' .github/workflows/*.yml
 sed -i '' 's/INGRESSIP/'$INGRESS_IP'/g' .github/workflows/*.yml
 ```
 
-### Creating Secrets on Github (in the repository Settings)
-![Adding Github secret](images/github_secrets.png)
+### Creating Secrets on GitHub (in the repository Settings)
+![Adding GitHub secret](images/github_secrets.png)
 
 1) The DOCKERHUB_TOKEN secret
 
@@ -66,8 +66,8 @@ az aks get-credentials --admin --name ${AKS_CLUSTER_NAME} --resource-group ${RES
 ```
 
 ### Running pipeline
-When you commit your .github folder to your forked repo, the Github will run the Action. The Action log could be found on the repository page:
-![Running Github action](images/github_action.png)
+When you commit your .github folder to your forked repo, the GitHub will run the Action. The Action log could be found on the repository page:
+![Running GitHub action](images/github_action.png)
 The Action will be fired on all changes in your repository, so all changes in the master branch will be automatically deployed.
 
 ## CI/CD based on GitHub + Azure Container Registry build
