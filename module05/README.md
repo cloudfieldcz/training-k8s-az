@@ -32,7 +32,7 @@ echo "You will be able to access application on this URL: http://${INGRESS_IP}.x
 helm upgrade --install myrelease helm/myapp --namespace='myapp' --set-string appspa.image.repository="${ACR_NAME}.azurecr.io/myappspa",appspa.image.tag='v1',apptodo.image.repository="${ACR_NAME}.azurecr.io/myapptodo",apptodo.image.tag='v1',apphost="${INGRESS_IP}.xip.io"
 
 # clean-up deployment
-helm delete --purge myrelease
+helm --namespace myapp delete myrelease
 # delete namespace
 kubectl delete namespace myapp
 ```
