@@ -51,7 +51,7 @@ echo $ACR_KEY
 ```bash
 # aks - create cluster
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_CLUSTER_NAME} \
-  --no-ssh-key --kubernetes-version 1.16.7 \
+  --no-ssh-key --kubernetes-version 1.16.9 \
   --node-count 2 --node-vm-size Standard_B2s \
   --location ${LOCATION}
 # kube config
