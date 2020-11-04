@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: myapp   # This label identifies our application, used for filtering output
       component: spa    # This label identifies component, used for Service definition
-      type: release    # This label identifies actual release vs. canary etc.      
+      type: canary    # This label identifies actual release vs. canary etc.      
   replicas: 1
   template:
     metadata:
