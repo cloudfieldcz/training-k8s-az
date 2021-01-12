@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: myapp-v2   # This label identifies our application, used for filtering output
-      component: todo    # This label identifies component, used for Service definition
+      component: spa    # This label identifies component, used for Service definition
       type: release    # This label identifies actual release vs. canary etc.
   replicas: 2
   template:
