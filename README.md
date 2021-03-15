@@ -46,13 +46,14 @@ export ACR_KEY=$(az acr credential show --name $ACR_NAME --resource-group $RESOU
 echo $ACR_KEY
 ```
 
-## Create Azure Kubernetes Service
+## Create Azure Kubernetes Service (with attached ACR)
 
 ```bash
 # aks - create cluster
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_CLUSTER_NAME} \
-  --no-ssh-key --kubernetes-version 1.18.14 \
+  --no-ssh-key --kubernetes-version 1.19.7 \
   --node-count 2 --node-vm-size Standard_B2s \
+  --attach-acr $ACR_NAME \
   --location ${LOCATION}
 # kube config
 az aks get-credentials --admin --name ${AKS_CLUSTER_NAME} --resource-group ${RESOURCE_GROUP}
@@ -62,19 +63,6 @@ kubectl delete clusterrolebinding kubernetes-dashboard
 kubectl create clusterrolebinding kubernetes-dashboard \
   -n kube-system --clusterrole=cluster-admin \
   --serviceaccount=kube-system:kubernetes-dashboard
-```
-
-## Setup access for AKS to ACR
-
-```bash
-# Get the id of the service principal configured for AKS
-CLIENT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --query "servicePrincipalProfile.clientId" --output tsv)
-
-# Get the ACR registry resource id
-ACR_ID=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query "id" --output tsv)
-
-# Create role assignment
-az role assignment create --assignee $CLIENT_ID --role AcrPull --scope $ACR_ID
 ```
 
 # Labs
