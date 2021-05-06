@@ -26,10 +26,10 @@ kubectl create secret generic myrelease-myapp \
 
 # Get ingress public IP
 export INGRESS_IP=$(kubectl get service nginx-ingress-ingress-nginx-controller  -n nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "You will be able to access application on this URL: http://${INGRESS_IP}.xip.io"
+echo "You will be able to access application on this URL: http://${INGRESS_IP}.nip.io"
 
 # deploy from ACR helm repository
-helm upgrade --install myrelease helm/myapp --namespace='myapp' --set-string appspa.image.repository="${ACR_NAME}.azurecr.io/myappspa",appspa.image.tag='v1',apptodo.image.repository="${ACR_NAME}.azurecr.io/myapptodo",apptodo.image.tag='v1',apphost="${INGRESS_IP}.xip.io"
+helm upgrade --install myrelease helm/myapp --namespace='myapp' --set-string appspa.image.repository="${ACR_NAME}.azurecr.io/myappspa",appspa.image.tag='v1',apptodo.image.repository="${ACR_NAME}.azurecr.io/myapptodo",apptodo.image.tag='v1',apphost="${INGRESS_IP}.nip.io"
 
 # clean-up deployment
 helm --namespace myapp delete myrelease
@@ -128,7 +128,7 @@ POSTGRESQL_URL="jdbc:postgresql://${POSTGRESQL_NAME}.postgres.database.azure.com
 
 # install jenkins - please put your github repository name to --giturl parameter
 ./jenkins/deploy.sh \
-  --ingressdns "${INGRESS_IP}.xip.io" \
+  --ingressdns "${INGRESS_IP}.nip.io" \
   --postgresjdbcurl "${POSTGRESQL_URL}" \
   --acrname "${ACR_NAME}" \
   --acrkey "${ACR_KEY}" \

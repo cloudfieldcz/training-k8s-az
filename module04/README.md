@@ -66,7 +66,7 @@ kubectl apply -f 02-myappspa-deploy.yaml -n myapp
 
 Wait for Deployment to redeploy Pods and check our /health URL works.
 ```bash
-curl http://$INGRESS_IP.xip.io/health
+curl http://$INGRESS_IP.nip.io/health
 ```
 
 Looks good. We will now change our probes implementation to point to /health.
@@ -94,7 +94,7 @@ kubectl apply -f 05-myappspa-deploy.yaml -n myapp
 
 Check it out
 ```bash
-curl http://$INGRESS_IP.xip.io/info/namespace.txt
+curl http://$INGRESS_IP.nip.io/info/namespace.txt
 ```
 
 # Use CronJob to periodically extract data from Postgresql

@@ -45,7 +45,7 @@ sed -i 's/YOURACRNAME/'$ACR_NAME'/g' myapp-deploy/*.yaml
 
 # Get ingress public IP
 export INGRESS_IP=$(kubectl get service nginx-ingress-ingress-nginx-controller -n nginx-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "You will be able to access application on this URL: http://${INGRESS_IP}.xip.io"
+echo "You will be able to access application on this URL: http://${INGRESS_IP}.nip.io"
 
 # Change YAML files for ingress
 sed -i 's/YOURINGRESSIP/'$INGRESS_IP'/g' myapp-deploy/*.yaml
@@ -75,7 +75,7 @@ sed -i 's/YOURACRNAME/'$ACR_NAME'/g' myapp-deploy-canary/*.yaml
 
 # Get ingress public IP
 export INGRESS_IP=$(kubectl get service ingress-nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "You will be able to access application on this URL: http://${INGRESS_IP}.xip.io"
+echo "You will be able to access application on this URL: http://${INGRESS_IP}.nip.io"
 
 # Change YAML files for ingress
 sed -i 's/YOURINGRESSIP/'$INGRESS_IP'/g' myapp-deploy-canary/*.yaml
@@ -88,12 +88,12 @@ kubectl apply -f myapp-deploy-canary --namespace myapp
 
 Is traffic really balanced to app versions? Let's find out.
 ```
-while true; do curl http://${INGRESS_IP}.xip.io/info.txt; done
+while true; do curl http://${INGRESS_IP}.nip.io/info.txt; done
 ```
 
 Enforce traffic routing only to canary based on HEADER values in requests.
 ```
-while true; do curl -H "myappspa-canary-v2: always" http://${INGRESS_IP}.xip.io/info.txt; done
+while true; do curl -H "myappspa-canary-v2: always" http://${INGRESS_IP}.nip.io/info.txt; done
 ```
 
 ### Note

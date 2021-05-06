@@ -1,7 +1,7 @@
 {{- if .Values.apptodo.ingress.enabled -}}
 {{- $serviceName := include "fullname" . -}}
 {{- $servicePort := .Values.apptodo.service.externalPort -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-todo
@@ -20,9 +20,12 @@ spec:
       http:
         paths:
           - path: {{ .Values.apptodo.ingress.myservicepath }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $serviceName }}-todo
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $serviceName }}-todo
+                port: 
+                  number: {{ $servicePort }}
   {{- if .Values.apptodo.ingress.tls }}
   tls:
 {{ toYaml .Values.apptodo.ingress.tls | indent 4 }}
