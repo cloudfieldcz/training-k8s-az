@@ -1,7 +1,7 @@
 {{- if .Values.appspa.ingress.enabled -}}
 {{- $serviceName := include "fullname" . -}}
 {{- $servicePort := .Values.appspa.service.externalPort -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-spa
@@ -20,9 +20,12 @@ spec:
       http:
         paths:
           - path: {{ .Values.appspa.ingress.myservicepath }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $serviceName }}-spa
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $serviceName }}-spa
+                port: 
+                  number: {{ $servicePort }}
   {{- if .Values.appspa.ingress.tls }}
   tls:
 {{ toYaml .Values.appspa.ingress.tls | indent 4 }}

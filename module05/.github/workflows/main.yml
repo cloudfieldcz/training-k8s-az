@@ -39,6 +39,6 @@ jobs:
             image: 
               repository: "YOURACRNAME.azurecr.io/myapptodo"
               tag: '${{ github.sha }}'
-          apphost: "INGRESSIP.xip.io"
+          apphost: "INGRESSIP.nip.io"
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
