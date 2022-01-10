@@ -14,10 +14,10 @@ mkdir myexperiment
 cd myexperiment
 
 # clone repo first
-git clone git@github.com:cloudfieldcz/training-k8s.git
+git clone git@github.com:cloudfieldcz/training-k8s-az.git
 
 # and now lets step into folder with project files.
-cd training-k8s
+cd training-k8s-az
 ```
 
 ## Create Azure Container Registry
